@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "dependencies": {
+    "tdesign-icons-vue-next": "^0.3.4",
+    "tdesign-pure": "workspace:*",
+    "tdesign-vue-next": "^1.10.6"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:build:github": "vitepress build --base /tdesign-pure-kit/",
+    "docs:preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vitepress-code-preview/container": "^1.0.8",
+    "@vitepress-code-preview/plugin": "^1.0.6",
+    "vite": "^6.0.5",
+    "vitepress": "^1.6.3"
+  },
+  "packageManager": "pnpm@8.10.5+sha1.4370a069f21873a0ad83c785b8048ed8caf6e6e9"
+}

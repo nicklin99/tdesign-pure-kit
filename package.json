@@ -1,0 +1,13 @@
+{
+  "name": "tdesign-pure-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm run --parallel -r --filter tdesign-pure --filter ./packages/docs dev"
+  },
+  "keywords": [],
+  "author": "nicklin99 <authen@qq.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@8.10.5+sha1.4370a069f21873a0ad83c785b8048ed8caf6e6e9"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "tdesign-pure",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch & vue-tsc -p tsconfig.dts.json --watch",
+    "dts": "vue-tsc -p tsconfig.dts.json",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "tdesign-icons-vue-next": "^0.3.4",
+    "tdesign-vue-next": "^1.10.6",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@babel/generator": "^7.26.9",
+    "@babel/parser": "^7.26.9",
+    "@babel/traverse": "^7.26.9",
+    "@babel/types": "^7.26.9",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/compiler-sfc": "^3.5.13",
+    "@vue/tsconfig": "^0.7.0",
+    "fast-glob": "^3.3.3",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5",
+    "vue-docgen-api": "^4.79.2",
+    "vue-tsc": "^2.2.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/es/main.js",
+      "types": "./dist/types/main.d.ts"
+    }
+  },
+  "packageManager": "pnpm@8.10.5+sha1.4370a069f21873a0ad83c785b8048ed8caf6e6e9"
+}

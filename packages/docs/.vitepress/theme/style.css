@@ -1,0 +1,4 @@
+/* fix doc布局对tdesign分页样式有影响 */
+.vp-doc li.t-pagination__number {
+    margin-top: 0;
+}

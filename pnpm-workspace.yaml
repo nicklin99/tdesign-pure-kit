@@ -1,0 +1,4 @@
+packages:
+  - 'packages/tdesign-pure'
+  - 'packages/examples'
+  - 'packages/docs'
