@@ -1,8 +1,8 @@
-import { defineConfig } from 'vitepress'
-import { fileURLToPath, URL } from 'node:url'
-import { demoPreviewPlugin } from '@vitepress-code-preview/plugin'
-import { viteDemoPreviewPlugin } from '@vitepress-code-preview/plugin'
-import app from './app'
+import { defineConfig } from "vitepress";
+import { fileURLToPath, URL } from "node:url";
+import { demoPreviewPlugin } from "@vitepress-code-preview/plugin";
+import { viteDemoPreviewPlugin } from "@vitepress-code-preview/plugin";
+import app from "./app";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -13,11 +13,12 @@ export default defineConfig({
     // 外层套个div也可以临时解决
     plugins: [viteDemoPreviewPlugin()],
   },
+  ignoreDeadLinks: true,
   markdown: {
     config(md) {
-      const docRoot = fileURLToPath(new URL('../', import.meta.url))
-      md.use(demoPreviewPlugin, { docRoot })
+      const docRoot = fileURLToPath(new URL("../", import.meta.url));
+      md.use(demoPreviewPlugin, { docRoot });
     },
   },
-  ...app
-})
+  ...app,
+});
