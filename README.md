@@ -9,15 +9,15 @@ pnpm install
 pnpm dev
 ```
 
-## design-plus
+## design-pure
 
-组件库
+ui组件库
 
 ## examples
 
 ```bash
 mkdir packages/examples
-pnpm init -y
+pnpm init
 ```
 
 ## docs
@@ -25,5 +25,5 @@ pnpm init -y
 ```bash
 pnpm add -D vitepress
 pnpm vitepress init
-pnpm run docs:dev
+pnpm run dev
 ```
