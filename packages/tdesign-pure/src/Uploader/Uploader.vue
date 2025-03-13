@@ -224,7 +224,7 @@ const files = ref<UploadFile[]>(defaultFiles);
 
 const handleFileListChange: UploadProps["onChange"] = (
   files: UploadFile[],
-  { trigger, index }
+  { trigger }
 ) => {
   // console.log(
   //   "handleFileListChange files:",
