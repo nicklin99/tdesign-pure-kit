@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   build: {
     rollupOptions: {
-      external: ["vue", "tdesign-vue-next", "tdesign-pure"],
+      external: ["vue", "tdesign-vue-next"],
     },
   },
 });

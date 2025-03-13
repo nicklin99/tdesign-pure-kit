@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { reactive, watch } from "vue";
-
-import { Input as TInput } from "tdesign-vue-next";
+import { reactive, ref, render, watch } from "vue";
+import Search from "./Search.vue"
+import { onRenderTracked, onRenderTriggered } from 'vue'
 import { TListTable, TContextProvider } from "tdesign-pure";
+import { useSearch } from "./useSearch"
+
 const paginationConfig = {
   pageSize: 50,
 };
-const query = reactive({
-  keyword: "",
-});
+const { query, search, submit } = useSearch({})
 const pagination = reactive({
   current: 1,
 });
@@ -17,7 +17,7 @@ const list = reactive({
   total: 0,
 });
 const load = () => {
-  console.log("load.pagination", pagination, query);
+  console.log("load.pagination", pagination);
 };
 const columns = [
   {
@@ -30,7 +30,7 @@ const columns = [
 ];
 
 watch(
-  [pagination, query],
+  [pagination],
   () => {
     load();
   },
@@ -38,12 +38,25 @@ watch(
     deep: true,
   }
 );
+onRenderTracked((e) => {
+  // debugger
+  console.log("render app Tracked", e)
+})
+
+onRenderTriggered((e) => {
+  console.log("render app Triggered", e)
+  // debugger
+})
+
+const renderSearch = ref(true)
 </script>
 
 <template>
+  <input v-model="query.keyword" /> {{ query }} 
+  <button @click="renderSearch = false">不显示搜索</button>
   <TContextProvider :pagination="paginationConfig">
     {{ pagination }}
-    <t-input v-model="query.keyword" />
+    <Search v-if="renderSearch" :search="search" @submit="submit" />
     <TListTable
       rowKey="id"
       :data="list.data"

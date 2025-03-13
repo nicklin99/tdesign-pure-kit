@@ -1,5 +1,6 @@
 export * from "./Table"
 export * from "./List"
+export * from "./Uploader"
 export * from "./types"
 export * from "./ContextProvider"
 export * from "./version"
