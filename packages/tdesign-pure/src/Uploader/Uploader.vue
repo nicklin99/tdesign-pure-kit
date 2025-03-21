@@ -185,7 +185,7 @@ type Props = {
   /**
    * 上传处理函数 `(file: UploadFile, _ref: typeof uploadRef) => Promise<{ url: string }>`
    */
-  upload: (
+  'on-upload': (
     file: UploadFile,
     _ref: typeof uploadRef
   ) => Promise<{ url: string }>;
@@ -312,7 +312,7 @@ const handleUploadImage: UploadProps["requestMethod"] = async (uploadFiles) => {
     file = uploadFiles as UploadFile;
   }
   try {
-    const data = await props.upload(file, uploadRef);
+    const data = await props["on-upload"](file, uploadRef);
     // 设置 file.percent 更新上传进度
     return Promise.resolve({
       status: "success",

@@ -6,7 +6,7 @@
 | theme | ThemeList | No | "image" as ThemeList | image 图片模式 |
 | tips | string  | No | "" | 提示文字 |
 | accept | string  | No |  | 文件类型  image/* 图片 video/* 视频, 更多常见类型 https://developer.mozilla.org/zh-CN/docs/Web/HTTP/MIME_types/Common_types |
-| upload | Function | Yes |  | 上传处理函数 `(file: UploadFile, _ref: typeof uploadRef) => Promise<{ url: string }>` |
+| on-upload | Function | Yes |  | 上传处理函数 `(file: UploadFile, _ref: typeof uploadRef) => Promise<{ url: string }>` |
 | sizeLimit | string  | No | "" | 大小限制 |
 | drag | boolean  | No | false | 是否开启拖拽 |
 | placeholder | string  | No |  | 占位符 |
