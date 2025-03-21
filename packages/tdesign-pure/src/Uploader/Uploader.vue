@@ -161,20 +161,58 @@ import {
 import { computed, ref, shallowRef, useSlots } from "vue";
 type ThemeList = UploadProps["theme"] | "video";
 type Props = {
-  max?: number; // 最多个数
-  multiple?: boolean; // 是否支持多选
-  theme?: ThemeList; // image 图片模式
-  tips?: string; // 提示文字
-  accept?: UploadProps["accept"]; // 文件类型  image/* 图片 video/* 视频, 更多常见类型 https://developer.mozilla.org/zh-CN/docs/Web/HTTP/MIME_types/Common_types
+  /**
+   * 最多个数
+   */
+  max?: number;
+  /**
+   * 是否支持多选
+   */
+  multiple?: boolean; 
+  /**
+   * image 图片模式
+   */
+  theme?: ThemeList; 
+  /**
+   * 提示文字
+   */
+  tips?: string;
+  /**
+   * 文件类型  image/* 图片 video/* 视频, 更多常见类型 https://developer.mozilla.org/zh-CN/docs/Web/HTTP/MIME_types/Common_types
+   */
+  accept?: UploadProps["accept"];
+  /**
+   * 上传处理函数
+   * @param file 当前文件
+   * @param _ref 上传组件实例
+   */
   onUpload: (
     file: UploadFile,
     _ref: typeof uploadRef
-  ) => Promise<{ url: string }>; // 上传回调
+  ) => Promise<{ url: string }>;
+  /**
+   * 大小限制
+   */
   sizeLimit?: string;
+  /**
+   * 是否开启拖拽
+   */
   drag?: boolean;
+  /**
+   * 占位符
+   */
   placeholder?: string;
+  /**
+   * 国际化文本
+   */
   locale?: UploadProps["locale"]; // 语言
+  /**
+   * 是否禁用
+   */
   disabled?: boolean;
+  /**
+   * 自定义 class 前缀
+   */
   classPrefix?: string;
 };
 const props = withDefaults(defineProps<Props>(), {
@@ -193,6 +231,11 @@ const sizeLimits = sizeMatchRet
       unit: sizeMatchRet[2],
     }
   : undefined;
+
+/**
+ * v-model
+ * 初始化的文件url
+ */
 const model = defineModel<string | string[]>();
 const uploadRef = shallowRef<UploadInstanceFunctions>();
 const initFiles = () => {
@@ -295,8 +338,7 @@ const onValidate: UploadProps["onValidate"] = ({ type, files }) => {
 };
 
 const previewVideo = (uri: string) => {
-  console.log("previewVideo:", uri);
-  // TODO: 预览视频
+  // 预览视频
   DialogPlugin({
     header: "预览视频",
     destroyOnClose: true,

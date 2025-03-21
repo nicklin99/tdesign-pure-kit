@@ -2,11 +2,21 @@ import fs from "node:fs"
 
 import glob from "fast-glob";
 import path from "node:path";
-import { ensureDir, vuePropsToMarkdown } from "./scripts/sfc.mjs";
+import { ensureDir, vueMetaToMarkdown } from "./scripts/sfc.mjs";
 import { tsxPropsToMarkdown } from "./scripts/tsc.mjs";
+import { createChecker } from 'vue-component-meta'
 // 配置
 const SRC_DIR = "./src/**/*.{vue,tsx}"; // 组件路径
 const OUTPUT_DIR = "../md"; // 输出目录
+const checker = createChecker(
+  path.resolve("tsconfig.app.json"),
+  {
+    forceUseTs: true,
+    noDeclarations: true,
+    schema: { ignore: ['MyIgnoredNestedProps'] },
+    printer: { newLine: 1 },
+    rawType: true,
+})
 // 递归创建目录
 
 const processComponent = async (filePath) => {
@@ -14,8 +24,8 @@ const processComponent = async (filePath) => {
     const ext = path.extname(filePath)
     var mdContent
     if (ext === ".vue") {
-      const source = fs.readFileSync(filePath, 'utf-8')
-      mdContent = vuePropsToMarkdown(source)
+      const meta = checker.getComponentMeta(filePath)
+      mdContent = vueMetaToMarkdown(meta)
     }
     if (ext === ".tsx") {
       const source = fs.readFileSync(filePath, 'utf-8')

@@ -6,7 +6,8 @@ import fs from "node:fs"
 
 import path from "node:path";
 import { generateMarkdown } from "./md.mjs"
-import { parsePropsObject, parseTypeLiteral } from "./props.mjs"
+import { parsePropsObject, parsePropsType, parseTypeLiteral } from "./props.mjs"
+import { typeDefinitions } from "./tsc.mjs"
 
 const { default: traverse} = traverser
 
@@ -23,14 +24,14 @@ function extractPropsFromDescriptor(descriptor) {
   // 处理 setup script
   if (descriptor.scriptSetup) {
     const scriptSetupContent = descriptor.scriptSetup.content
-    propsInfo = [...propsInfo, ...parseScript(scriptSetupContent, true)]
+    propsInfo = [...propsInfo, ...parseScript(scriptSetupContent, true, descriptor.filename)]
   }
 
   return propsInfo
 }
 
 // 解析 script 内容
-function parseScript(content, isSetup = false) {
+function parseScript(content, isSetup = false, filename = '') {
   const ast = parse(content, {
     sourceType: 'module',
     plugins: [
@@ -42,6 +43,12 @@ function parseScript(content, isSetup = false) {
   const props = []
 
   traverse(ast, {
+    // TSInterfaceDeclaration(path) {
+    //   typeDefinitions.set(path.node.id.name, path.node);
+    // },
+    TSTypeAliasDeclaration(path) {
+      typeDefinitions.set(filename + "_" + path.node.id.name, path.node)
+    },
     ObjectProperty(path) {
       if (!isSetup && 
           path.parentPath.isObjectExpression() &&
@@ -53,13 +60,25 @@ function parseScript(content, isSetup = false) {
     },
 
     CallExpression(path) {
-      if (isSetup &&
-          path.node.callee.name === 'defineProps') {
-        const arg = path.node.arguments[0]
-        if (t.isObjectExpression(arg)) {
-          parsePropsObject(arg, props)
-        } else if (t.isTSTypeLiteral(arg)) {
-          parseTypeLiteral(arg, props)
+      if (isSetup) {
+        if (path.node.callee.name === 'defineProps') {
+          const arg = path.node.arguments[0]
+          if (arg) {
+            // console.log("defineProps:", path.node)
+            if (t.isObjectExpression(arg)) {
+              parsePropsObject(arg, props)
+            } else if (t.isTSTypeLiteral(arg)) {
+              parseTypeLiteral(arg, props)
+            }
+          } else if (path.node.typeParameters) {
+            const typeDef = typeDefinitions.get(filename + "_" + path.node.typeParameters.params[0].typeName.name)
+            parsePropsType(typeDef.typeAnnotation, props, typeDefinitions)
+          }
+        }
+        
+        // TODO 支持解析补充默认值
+        if (path.node.callee.name === 'withDefaults') {
+          
         }
       }
     }
@@ -81,12 +100,24 @@ function extractTSType(typeAnnotation) {
 }
 
 // 主函数
-export function vuePropsToMarkdown(source) {
-  const { descriptor } = parseVue(source)
+export function vuePropsToMarkdown(source, filename = '') {
+  const { descriptor } = parseVue(source, {
+    filename
+  })
   const props = extractPropsFromDescriptor(descriptor)
   return generateMarkdown(props)
 }
 
+export function vueMetaToMarkdown(meta) {
+  const props = meta.props.filter(prop => !prop.global).map((prop) => ({
+    name: prop.name,
+    type: prop.type.replace('| undefined', '').replace('|', '\|'),
+    required: prop.required,
+    description: prop.description,
+    default: prop.default,
+  }));
+  return generateMarkdown(props)
+}
 
 
 // 配置
@@ -101,7 +132,7 @@ export const ensureDir = (dirPath) => {
 const processComponent = async (filePath) => {
   try {
     const source = fs.readFileSync(filePath, 'utf-8')
-    const mdContent = vuePropsToMarkdown(source)
+    const mdContent = vuePropsToMarkdown(source, path.basename(filePath))
     // 保持目录结构
     const relativePath = path.relative(path.join(process.cwd(), "src"), filePath);
     const outputPath = path.join(
