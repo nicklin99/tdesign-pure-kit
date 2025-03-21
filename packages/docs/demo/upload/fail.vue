@@ -12,7 +12,7 @@ import { ref } from "vue"
 const url = ref()
 const args = {
     multiple: true,
-    onUpload: (file, _ref) => {
+    upload: (file, _ref) => {
       return Promise.reject("多图上传失败")
     }
   }

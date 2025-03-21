@@ -13,7 +13,7 @@ const url = ref()
 const args = {
     multiple: true,
     max: 3,
-    onUpload: (file, _ref) => {
+    upload: (file, _ref) => {
       // 模拟上传处理
       return new Promise((resolve) => {
         let i = 0
