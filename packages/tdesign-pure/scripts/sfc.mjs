@@ -109,13 +109,22 @@ export function vuePropsToMarkdown(source, filename = '') {
 }
 
 export function vueMetaToMarkdown(meta) {
-  const props = meta.props.filter(prop => !prop.global).map((prop) => ({
-    name: prop.name,
-    type: prop.type.replace('| undefined', '').replace('|', '\|'),
-    required: prop.required,
-    description: prop.description,
-    default: prop.default,
-  }));
+  const props = meta.props.filter(prop => !prop.global).map((prop) => {
+    let propType = prop.type
+    if (prop.type.includes('=>')) {
+      propType = 'Function'
+    } else {
+      propType = prop.type.replace('| undefined', '').replace('|', '\\|')
+    }
+    
+    return {
+      name: prop.name,
+      type: propType,
+      required: prop.required,
+      description: prop.description,
+      default: prop.default,
+    }
+  });
   return generateMarkdown(props)
 }
 

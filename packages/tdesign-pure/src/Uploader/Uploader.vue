@@ -160,6 +160,7 @@ import {
 } from "tdesign-icons-vue-next";
 import { computed, ref, shallowRef, useSlots } from "vue";
 type ThemeList = UploadProps["theme"] | "video";
+
 type Props = {
   /**
    * 最多个数
@@ -182,11 +183,9 @@ type Props = {
    */
   accept?: UploadProps["accept"];
   /**
-   * 上传处理函数
-   * @param file 当前文件
-   * @param _ref 上传组件实例
+   * 上传处理函数 `(file: UploadFile, _ref: typeof uploadRef) => Promise<{ url: string }>`
    */
-  onUpload: (
+  upload: (
     file: UploadFile,
     _ref: typeof uploadRef
   ) => Promise<{ url: string }>;
@@ -233,8 +232,7 @@ const sizeLimits = sizeMatchRet
   : undefined;
 
 /**
- * v-model
- * 初始化的文件url
+ * v-model 初始化的文件url, 单文件上传字符串,多个用字符串数组
  */
 const model = defineModel<string | string[]>();
 const uploadRef = shallowRef<UploadInstanceFunctions>();
@@ -314,7 +312,7 @@ const handleUploadImage: UploadProps["requestMethod"] = async (uploadFiles) => {
     file = uploadFiles as UploadFile;
   }
   try {
-    const data = await props.onUpload(file, uploadRef);
+    const data = await props.upload(file, uploadRef);
     // 设置 file.percent 更新上传进度
     return Promise.resolve({
       status: "success",
